@@ -3,6 +3,7 @@ angular.module('Befunge')
         numbers: '>987v>.v\nv456<  :\n>321 ^ _@',
         hello: '>0"olleH":v\n      >:#,_56+3*,@',
         smile: '77*:9+,8-,@',
+        smile2: '77*:9+01p8-11p@',
         empty: '@'
     })
     .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples) {
@@ -25,21 +26,12 @@ angular.module('Befunge')
             $scope.state = $scope.states[$scope.curStateIndex];
         }
 
-        function copyState(state) {
-            return {
-                stack: angular.copy(state.stack),
-                output: state.output,
-                x: state.x,
-                y: state.y,
-                dir: state.dir
-            };
-        }
-
         $scope.play = function () {
             if($scope.player) return;
             $scope.player = $interval(function () {
                 $scope.step();
             }, 50);
+            $scope.step();
         };
         $scope.stop = function () {
             if($scope.player) {
@@ -53,6 +45,11 @@ angular.module('Befunge')
         });
 
         $scope.step = function () {
+            if($scope.curStateIndex < $scope.maxStateIndex) {
+                $scope.curStateIndex++;
+                return;
+            }
+
             if(!$scope.interp) {
                 $scope.stop();
                 return;
@@ -60,7 +57,7 @@ angular.module('Befunge')
 
             var interp = $scope.interp;
             if(interp.step()) {
-                $scope.states.push(copyState(interp.state));
+                $scope.states.push(angular.copy(interp.state));
             } else {
                 $scope.error = interp.state.error;
                 interp = null;
@@ -72,12 +69,10 @@ angular.module('Befunge')
         function run() {
             $scope.stop();
             var interp = $scope.interp = interpreter($scope.editor.source);
-            $scope.states = [copyState(interp.state)];
+            $scope.states = [angular.copy(interp.state)];
             $scope.error = interp.state.error;
             updateScrubber();
         }
 
-        $scope.$watchCollection('editor.source', function (editor) {
-            run();
-        });
+        $scope.$watchCollection('editor.source', run);
     });

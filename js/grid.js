@@ -3,14 +3,15 @@ angular.module("Befunge")
         return function (scope, elem, attr) {
             elem.addClass("grid");
 
-            scope.$watch(attr.source, function (source) {
+            var current;
+            scope.$watch(attr.state, function (state) {
                 elem.empty();
-                source.split('\n').forEach(function (row) {
+                state.rows.forEach(function (row) {
                     var rowElem = angular.element(document.createElement("div"));
                     rowElem.addClass("gridRow");
                     elem.append(rowElem);
 
-                    row.split('').forEach(function (cell) {
+                    row.forEach(function (cell) {
                         var cellElem = angular.element(document.createElement("div"));
                         cellElem.addClass("gridCell");
                         if(cell === " ")
@@ -20,10 +21,7 @@ angular.module("Befunge")
                         rowElem.append(cellElem);
                     });
                 });
-            });
 
-            var current;
-            scope.$watch(attr.state, function (state) {
                 if(current)
                     current.removeClass("current");
                 if(state)

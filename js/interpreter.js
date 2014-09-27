@@ -88,20 +88,51 @@ angular.module('Befunge')
             var y = state.stack.pop();
             var x = state.stack.pop();
             var v = state.stack.pop();
+            ensureSize(state, x+1, y+1);
             state.rows[y][x] = String.fromCharCode(v);
         }
         function get(state) {
             var y = state.stack.pop();
             var x = state.stack.pop();
-            state.stack.push(state.rows[y][x].charCodeAt(0));
+            state.stack.push(isInBounds(state, x, y) ? state.rows[y][x].charCodeAt(0) : ' ');
         }
         function end(state) {
             state.done = true;
         }
         function nop() {}
 
+        function makeSpace(length) {
+            return Array.apply(null, new Array(length)).map("".valueOf, ' ');
+        }
+
+        function flattenRows(state) {
+            var width = state.width;
+            state.rows.forEach(function (row) {
+                if(width > row.length) {
+                    row.push.apply(row, makeSpace(width - row.length));
+                }
+            });
+        }
+
+        function ensureSize(state, width, height) {
+            if(width > state.width) {
+                state.width = width;
+                flattenRows(state);
+            }
+            if(height > state.height) {
+                for(var i=state.height;i<height;i++) {
+                    state.rows[i] = makeSpace(state.width);
+                }
+                state.height = height;
+            }
+        }
+
+        function isInBounds(state, x, y) {
+            return y >= 0 && y < state.height && x >= 0 && x < state.width;
+        }
+
         function step(state) {
-            if (state.y < 0 || state.y >= state.rows.length || state.x < 0 || state.x >= state.rows[state.y].length) {
+            if (!isInBounds(state, state.x, state.y)) {
                 throw (state.string ? "Unterminated string" : "Out of bounds") + " (" + state.x + ", " + state.y + ")";
             }
 
@@ -135,18 +166,25 @@ angular.module('Befunge')
         }
 
         return function (code) {
+            var rows = (code || "").split('\n').map(function (line) {
+                return line.split("");
+            });
             var state = {
                 stack: [],
                 output: "",
-                rows: (code || "").split('\n').map(function (line) {
-                    return line.split("");
-                }),
+                rows: rows,
                 x: 0,
                 y: 0,
                 dir: 0,
                 done: false,
-                string: false
+                string: false,
+                width: rows.reduce(function (max, row) {
+                    return Math.max(max, row.length);
+                }, 0),
+                height: rows.length
             };
+
+            flattenRows(state);
 
             return {
                 state: state,

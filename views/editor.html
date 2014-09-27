@@ -3,14 +3,15 @@
     <div>
         <button ng-repeat="(name, code) in ::samples" ng-click="editor.source = code" ng-bind="::name"></button>
     </div>
-    <textarea class="source" ng-model="editor.source" ng-trim="false" ng-model-options="{debounce:100}"></textarea>
-    <br/>
-    <input type="number" min="0" max="{{maxStateIndex}}" ng-model="curStateIndex"/>
-    <button ng-click="play()" ng-disabled="player" class="fa fa-play"></button>
-    <button ng-click="step()" ng-disabled="player" class="fa fa-step-forward"></button>
-    <button ng-click="stop()" ng-disabled="!player" class="fa fa-stop"></button>
-    <br/>
-    <grid source="editor.source" state="state"></grid>
+    <textarea class="source" ng-model="editor.source" ng-trim="false"></textarea>
+    <div>
+        <input type="number" min="0" max="{{maxStateIndex}}" ng-model="curStateIndex"/>
+        <button ng-click="curStateIndex = 0" class="fa fa-fast-backward"></button>
+        <button ng-click="play()" ng-disabled="player" class="fa fa-play"></button>
+        <button ng-click="step()" ng-disabled="player" class="fa fa-step-forward"></button>
+        <button ng-click="stop()" ng-disabled="!player" class="fa fa-stop"></button>
+    </div>
+    <grid state="state"></grid>
     <div ng-bind="error" class="error"></div>
     <div ng-bind="state | json"></div>
 </div>
