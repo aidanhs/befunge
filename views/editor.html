@@ -3,7 +3,7 @@
     <div>
         <button ng-repeat="(name, code) in ::samples" ng-click="editor.source = code" ng-bind="::name"></button>
     </div>
-    <textarea class="source" ng-model="editor.source" ng-trim="false"></textarea><br/>
+    <textarea class="source" ng-model="editor.source" ng-trim="false" ng-model-options="{debounce:100}"></textarea><br/>
     <label>
         <input type="checkbox" ng-model="editor.autoUpdate"/>
         Run automatically

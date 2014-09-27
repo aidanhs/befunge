@@ -46,12 +46,12 @@ angular.module('Befunge')
             $scope.maxStateIndex = $scope.states.length- 1;
             $scope.curStateIndex = $scope.maxStateIndex;
             setCurrentState();
-        }
+        };
 
         function run() {
+            if(instance) $scope.stop();
             $scope.states = [];
             $scope.error = "";
-            if(instance) $scope.stop();
 
             longRunTimer = $timeout(function () {
                 $scope.showStop = true;

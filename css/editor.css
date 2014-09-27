@@ -6,6 +6,10 @@
 .grid {
     font-family: monospace;
 }
+
+.gridRow {
+    height: 27px;
+}
 .gridRow::after {
     content: "";
     clear: both;
