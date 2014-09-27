@@ -3,14 +3,6 @@ angular.module("Befunge")
         return function (scope, elem, attr) {
             elem.addClass("grid");
 
-            var current;
-            scope.$watch(attr.state, function (state) {
-                if(current) current.removeClass("current");
-                if(!state) return;
-                current = elem.children().eq(state.y).children().eq(state.x);
-                current.addClass("current");
-            });
-
             scope.$watch(attr.source, function (source) {
                 elem.empty();
                 source.split('\n').forEach(function (row) {
@@ -28,6 +20,14 @@ angular.module("Befunge")
                         rowElem.append(cellElem);
                     });
                 });
+            });
+
+            var current;
+            scope.$watch(attr.state, function (state) {
+                if(current)
+                    current.removeClass("current");
+                if(state)
+                    current = elem.children().eq(state.y).children().eq(state.x).addClass("current");
             });
         }
     });

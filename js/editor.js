@@ -5,75 +5,79 @@ angular.module('Befunge')
         smile: '77*:9+,8-,@',
         empty: '@'
     })
-    .controller('EditorCtrl', function ($scope, codeSamples, $timeout, interpreter) {
-        $scope.editor = { source: codeSamples.empty, autoUpdate: true };
-        $scope.grid = [];
-        $scope.states = [];
+    .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples) {
+        $scope.editor = { source: codeSamples.empty };
         $scope.samples = codeSamples;
-        $scope.showStop = false;
+
+        $scope.states = [];
         $scope.state = {};
         $scope.maxStateIndex = 0;
         $scope.curStateIndex = 0;
+        $scope.player = null;
 
-        function setCurrentState() {
+        $scope.$watch('curStateIndex', function (idx) {
+            $scope.state = $scope.states[idx];
+        });
+
+        function updateScrubber() {
+            $scope.maxStateIndex = $scope.states.length - 1;
+            $scope.curStateIndex = $scope.maxStateIndex;
             $scope.state = $scope.states[$scope.curStateIndex];
         }
 
-        $scope.$watch('curStateIndex', setCurrentState);
-
-        function updateGrid() {
-            $scope.grid = ($scope.editor.source||"").split('\n').map(function (line, y) {
-                return line.split("").map(function (cell, x) {
-                    var hash = 13;
-                    hash = (hash * 7) + x;
-                    hash = (hash * 7) + y;
-                    hash = (hash * 7) + cell.charCodeAt(0);
-                    return {id:hash,type:cell};
-                });
-            });
+        function copyState(state) {
+            return {
+                stack: angular.copy(state.stack),
+                output: state.output,
+                x: state.x,
+                y: state.y,
+                dir: state.dir
+            };
         }
 
-        var instance = null;
-        var longRunTimer = null;
-
-        $scope.stop = function() {
-            instance.cancel();
-            if(longRunTimer) {
-                $timeout.cancel(longRunTimer);
-                longRunTimer = null;
+        $scope.play = function () {
+            if($scope.player) return;
+            $scope.player = $interval(function () {
+                $scope.step();
+            }, 50);
+        };
+        $scope.stop = function () {
+            if($scope.player) {
+                $interval.cancel($scope.player);
+                $scope.player = null;
             }
-            $scope.showStop = false;
-            $scope.maxStateIndex = $scope.states.length- 1;
-            $scope.curStateIndex = $scope.maxStateIndex;
-            setCurrentState();
+        };
+
+        $scope.$on('$destroy', function () {
+            $scope.stop();
+        });
+
+        $scope.step = function () {
+            if(!$scope.interp) {
+                $scope.stop();
+                return;
+            }
+
+            var interp = $scope.interp;
+            if(interp.step()) {
+                $scope.states.push(copyState(interp.state));
+            } else {
+                $scope.error = interp.state.error;
+                interp = null;
+                $scope.stop();
+            }
+            updateScrubber();
         };
 
         function run() {
-            if(instance) $scope.stop();
-            $scope.states = [];
-            $scope.error = "";
-
-            longRunTimer = $timeout(function () {
-                $scope.showStop = true;
-                longRunTimer = null;
-            }, 1000);
-
-            (instance = interpreter($scope.editor.source, true)).promise.then(function () {
-                $scope.stop();
-            }, function (error) {
-                $scope.error = error;
-                $scope.stop();
-            }, function (state) {
-                $scope.states.push(state);
-                if($scope.states.length > 1000) {
-                    $scope.error = "Exiting after 1000 iterations";
-                    $scope.stop();
-                }
-            });
+            $scope.stop();
+            var interp = $scope.interp = interpreter($scope.editor.source);
+            $scope.states = [copyState(interp.state)];
+            $scope.error = interp.state.error;
+            updateScrubber();
         }
 
-        $scope.$watchCollection('editor', function (editor) {
-            updateGrid();
-            if(editor.autoUpdate) run();
+        $scope.$watchCollection('editor.source', function (editor) {
+            run();
         });
     });
