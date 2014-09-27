@@ -4,11 +4,13 @@ angular.module('Befunge')
         hello: '>0"olleH":v\n      >:#,_56+3*,@',
         smile: '77*:9+,8-,@',
         smile2: '77*:9+01p8-11p@',
-        empty: '@'
+        empty: '@',
+        exitLooper: '61v\n>\\>2*:0v\n|:-1\\p3<'
     })
-    .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples) {
+    .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples, cheatSheet) {
         $scope.editor = { source: codeSamples.empty };
         $scope.samples = codeSamples;
+        $scope.cheatSheet = cheatSheet;
 
         $scope.states = [];
         $scope.state = {};
@@ -59,7 +61,9 @@ angular.module('Befunge')
             if(interp.step()) {
                 $scope.states.push(angular.copy(interp.state));
             } else {
-                $scope.error = interp.state.error;
+                var state = $scope.states[$scope.states.length-1];
+                state.error = interp.state.error;
+                state.done = 1;
                 interp = null;
                 $scope.stop();
             }

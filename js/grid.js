@@ -4,7 +4,7 @@ angular.module("Befunge")
             elem.addClass("grid");
 
             var current;
-            scope.$watch(attr.state, function (state) {
+            scope.$watch(attr.grid, function (state) {
                 elem.empty();
                 state.rows.forEach(function (row) {
                     var rowElem = angular.element(document.createElement("div"));
@@ -14,10 +14,14 @@ angular.module("Befunge")
                     row.forEach(function (cell) {
                         var cellElem = angular.element(document.createElement("div"));
                         cellElem.addClass("gridCell");
-                        if(cell === " ")
+                        if(cell === " ") {
                             cellElem.addClass("blank");
-                        else
-                            cellElem.text(cell);
+                        } else {
+                            var code = cell.charCodeAt(0);
+                            var isNum = code < 32 || code > 126;
+                            cellElem.text(isNum ? code : cell);
+                            if(isNum) cellElem.addClass("num");
+                        }
                         rowElem.append(cellElem);
                     });
                 });

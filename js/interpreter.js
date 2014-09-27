@@ -155,14 +155,19 @@ angular.module('Befunge')
                 }
             }
 
-            if (state.dir === 0)
+            if (state.dir === 0) {
                 state.x++;
-            else if (state.dir === 1)
+                if(state.x >= state.width) state.x = 0;
+            } else if (state.dir === 1) {
                 state.y++;
-            else if (state.dir === 2)
+                if(state.y >= state.height) state.y = 0;
+            } else if (state.dir === 2) {
                 state.x--;
-            else
+                if(state.x < 0) state.x = state.width - 1;
+            } else {
                 state.y--;
+                if(state.y < 0) state.y = state.height - 1;
+            }
         }
 
         return function (code) {

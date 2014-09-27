@@ -1,3 +1,7 @@
+body {
+    font: 12px sans-serif;
+}
+
 .source {
     width: 250px;
     height: 125px;
@@ -25,6 +29,7 @@
     border: 1px solid #003b76;
     margin: 0 1px 1px 0;
     border-radius: 5px;
+    text-align: center;
 }
 .gridCell.blank {
     background: none;
@@ -34,7 +39,50 @@
 .gridCell.current {
     background: rgba(0,128,255,0.25);
 }
+.gridCell.num {
+    font-size: 75%;
+    font-weight: bold;
+    color: #666;
+    text-align: left;
+}
 
+.mono {
+    font-family: monospace;
+}
 .error {
     color: red;
+}
+
+.cheatSheet {
+    position: absolute;
+    right: 0;
+    width: 400px;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px;
+    background: white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+.cheatRow {
+    margin: 3px 0;
+}
+.cheatRow:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+.cheatCmd {
+    display: block;
+    float: left;
+    width: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.cheatDescr {
+    display: block;
+    float: right;
+    width: 340px;
+}
+.cheatRes {
+    margin-top: 10px;
 }
