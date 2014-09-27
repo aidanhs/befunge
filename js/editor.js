@@ -22,7 +22,7 @@ angular.module('Befunge')
         $scope.$watch('curStateIndex', setCurrentState);
 
         function updateGrid() {
-            $scope.grid = ($scope.editor.source||[]).split('\n').map(function (line, y) {
+            $scope.grid = ($scope.editor.source||"").split('\n').map(function (line, y) {
                 return line.split("").map(function (cell, x) {
                     var hash = 13;
                     hash = (hash * 7) + x;
