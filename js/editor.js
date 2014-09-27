@@ -7,6 +7,7 @@ angular.module('Befunge')
     })
     .controller('EditorCtrl', function ($scope, codeSamples, $timeout, interpreter) {
         $scope.editor = { source: codeSamples.empty, autoUpdate: true };
+        $scope.grid = [];
         $scope.states = [];
         $scope.state = {};
         $scope.samples = codeSamples;
@@ -18,6 +19,18 @@ angular.module('Befunge')
             if (data.done) {
                 $scope.stop();
             }
+        }
+
+        function updateGrid() {
+            $scope.grid = ($scope.editor.source||[]).split('\n').map(function (line, y) {
+                return line.split("").map(function (cell, x) {
+                    var hash = 13;
+                    hash = (hash * 7) + x;
+                    hash = (hash * 7) + y;
+                    hash = (hash * 7) + cell.charCodeAt(0);
+                    return {id:hash,type:cell};
+                });
+            });
         }
 
         var instance = null;
@@ -43,6 +56,7 @@ angular.module('Befunge')
         }
 
         $scope.$watchCollection('editor', function (editor) {
+            updateGrid();
             if(editor.autoUpdate) run();
         });
     });

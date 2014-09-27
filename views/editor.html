@@ -3,12 +3,13 @@
     <div>
         <button ng-repeat="(name, code) in ::samples" ng-click="editor.source = code" ng-bind="::name"></button>
     </div>
-    <textarea ng-model="editor.source" ng-trim="false"></textarea><br/>
+    <textarea class="source" ng-model="editor.source" ng-trim="false"></textarea><br/>
     <label>
         <input type="checkbox" ng-model="editor.autoUpdate"/>
         Run automatically
     </label>
     <button ng-click="stop()" ng-show="showStop">Stop</button>
+    <div grid="editor.source"></div>
     <div ng-bind="state.output"></div>
     <div ng-bind="state.error" style="color:red"></div>
     <div ng-repeat="state in states">{{::state | json}}</div>

@@ -1,0 +1,23 @@
+.source {
+    width: 250px;
+    height: 125px;
+}
+
+.grid {
+    font-family: monospace;
+}
+.gridRow::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+.gridCell {
+    box-sizing: border-box;
+    float: left;
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    border: 1px solid #666;
+    margin: 0 1px 1px 0;
+    border-radius: 5px;
+}
