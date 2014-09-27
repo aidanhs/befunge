@@ -65,6 +65,10 @@ angular.module('Befunge')
                 $scope.stop();
             }, function (state) {
                 $scope.states.push(state);
+                if($scope.states.length > 1000) {
+                    $scope.error = "Exiting after 1000 iterations";
+                    $scope.stop();
+                }
             });
         }
 
