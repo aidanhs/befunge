@@ -9,17 +9,17 @@ angular.module('Befunge')
         $scope.editor = { source: codeSamples.empty, autoUpdate: true };
         $scope.grid = [];
         $scope.states = [];
-        $scope.state = {};
         $scope.samples = codeSamples;
         $scope.showStop = false;
+        $scope.state = {};
+        $scope.maxStateIndex = 0;
+        $scope.curStateIndex = 0;
 
-        function handleResponse(data) {
-            $scope.states.push(data);
-            $scope.state = data;
-            if (data.done) {
-                $scope.stop();
-            }
+        function setCurrentState() {
+            $scope.state = $scope.states[$scope.curStateIndex];
         }
+
+        $scope.$watch('curStateIndex', setCurrentState);
 
         function updateGrid() {
             $scope.grid = ($scope.editor.source||[]).split('\n').map(function (line, y) {
@@ -43,16 +43,29 @@ angular.module('Befunge')
                 longRunTimer = null;
             }
             $scope.showStop = false;
+            $scope.maxStateIndex = $scope.states.length- 1;
+            $scope.curStateIndex = $scope.maxStateIndex;
+            setCurrentState();
         }
 
         function run() {
             $scope.states = [];
+            $scope.error = "";
             if(instance) $scope.stop();
+
             longRunTimer = $timeout(function () {
                 $scope.showStop = true;
                 longRunTimer = null;
             }, 1000);
-            (instance = interpreter($scope.editor.source, true)).promise.then(handleResponse, handleResponse, handleResponse);
+
+            (instance = interpreter($scope.editor.source, true)).promise.then(function () {
+                $scope.stop();
+            }, function (error) {
+                $scope.error = error;
+                $scope.stop();
+            }, function (state) {
+                $scope.states.push(state);
+            });
         }
 
         $scope.$watchCollection('editor', function (editor) {

@@ -6,21 +6,17 @@ angular.module('Befunge')
             var done = false;
             var requestedCancel = false;
             worker.addEventListener('message', function (event) {
-                if(event.data === "start") {
+                var data = event.data;
+                if(data === "start") {
                     started = true;
                     if(requestedCancel)
                         cancel();
+                } else if(data === "done") {
+                    q.resolve();
+                } else if(data.charAt(0) === 'E') {
+                    q.reject(data.substr(1));
                 } else {
-                    var data = JSON.parse(event.data);
-                    if (data.done) {
-                        done = true;
-                        if ('error' in data)
-                            q.reject(data);
-                        else
-                            q.resolve(data);
-                    } else {
-                        q.notify(data);
-                    }
+                    q.notify(JSON.parse(data));
                 }
             });
             worker.addEventListener('error', function (event) {

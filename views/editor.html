@@ -9,8 +9,9 @@
         Run automatically
     </label>
     <button ng-click="stop()" ng-show="showStop">Stop</button>
-    <div grid="editor.source"></div>
-    <div ng-bind="state.output"></div>
-    <div ng-bind="state.error" style="color:red"></div>
-    <div ng-repeat="state in states">{{::state | json}}</div>
+    <br/>
+    <input type="range" min="0" max="{{maxStateIndex}}" ng-model="curStateIndex"/>
+    <grid source="editor.source" state="state"></grid>
+    <div ng-bind="error" class="error"></div>
+    <div ng-bind="state | json"></div>
 </div>

@@ -99,16 +99,6 @@
     }
     function nop() {}
 
-    function response(state) {
-        postMessage(JSON.stringify(state, function (key, value) {
-            switch (key) {
-                case "rows": return undefined;
-                case "done": case "string": return value || undefined;
-                default: return value;
-            }
-        }));
-    }
-
     function step(state) {
         if (state.y < 0 || state.y >= state.rows.length || state.x < 0 || state.x >= state.rows[state.y].length) {
             throw (state.string ? "Unterminated string" : "Out of bounds") + " (" + state.x + ", " + state.y + ")";
@@ -146,9 +136,7 @@
     onmessage = function (event) {
         postMessage("start");
 
-        var state = {},
-            code = event.data.code || "",
-            requestUpdates = event.data.requestUpdates || false;
+        var state = {}, code = event.data.code || "";
 
         try {
             state = {
@@ -165,20 +153,22 @@
             };
 
             while (!state.done) {
-                if(requestUpdates)
-                    response(state);
+                postMessage(JSON.stringify(state, function (key, value) {
+                    switch (key) {
+                        case "rows": return undefined;
+                        case "done": case "string": return value || undefined;
+                        default: return value;
+                    }
+                }));
 
                 step(state);
             }
+
+            postMessage("done");
         } catch(e) {
-            state.done = true;
-            state.error = e.stack || e;
+            postMessage("E" + (e.stack || e));
         } finally {
-            try {
-                response(state);
-            } finally{
-                close();
-            }
+            close();
         }
     }
 })();

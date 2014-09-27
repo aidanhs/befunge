@@ -12,12 +12,25 @@
     display: block;
 }
 .gridCell {
+    background: rgba(0,128,255,0.04);
     box-sizing: border-box;
     float: left;
     width: 26px;
     height: 26px;
     padding: 2px;
-    border: 1px solid #666;
+    border: 1px solid #003b76;
     margin: 0 1px 1px 0;
     border-radius: 5px;
+}
+.gridCell.blank {
+    background: none;
+    border: none;
+    padding: 0;
+}
+.gridCell.current {
+    background: rgba(0,128,255,0.25);
+}
+
+.error {
+    color: red;
 }
