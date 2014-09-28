@@ -1,49 +1,11 @@
-body {
+html, body {
     font: 12px sans-serif;
+    overflow: hidden;
 }
 
 .source {
     width: 250px;
     height: 125px;
-}
-
-.grid {
-    font-family: monospace;
-}
-
-.gridRow {
-    height: 27px;
-}
-.gridRow::after {
-    content: "";
-    clear: both;
-    display: block;
-}
-.gridCell {
-    background: rgba(0,128,255,0.04);
-    box-sizing: border-box;
-    float: left;
-    width: 26px;
-    height: 26px;
-    padding: 2px;
-    border: 1px solid #003b76;
-    margin: 0 1px 1px 0;
-    border-radius: 5px;
-    text-align: center;
-}
-.gridCell.blank {
-    background: none;
-    border: none;
-    padding: 0;
-}
-.gridCell.current {
-    background: rgba(0,128,255,0.25);
-}
-.gridCell.num {
-    font-size: 75%;
-    font-weight: bold;
-    color: #666;
-    text-align: left;
 }
 
 .mono {
@@ -56,7 +18,11 @@ body {
 .cheatSheet {
     position: absolute;
     right: 0;
+    top: 0;
+    bottom: 0;
     width: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
     box-sizing: border-box;
     padding: 10px;
     margin: 10px;
@@ -81,7 +47,7 @@ body {
 .cheatDescr {
     display: block;
     float: right;
-    width: 340px;
+    width: 320px;
 }
 .cheatRes {
     margin-top: 10px;

@@ -10,26 +10,19 @@ angular.module('Befunge')
     .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples) {
         $scope.editor = { source: codeSamples.empty };
         $scope.samples = codeSamples;
-        var states;
+        var states, interp;
 
         function step() {
-            var interp = $scope.interp;
             if(interp) {
-                if (interp.step()) {
-                    states.push(angular.copy(interp.state));
-                    $scope.$broadcast('state.changed', states);
-                } else {
-                    var state = states[states.length - 1];
-                    state.error = interp.state.error;
-                    state.done = 1;
-                    interp = null;
-                    $scope.$broadcast('state.done', states);
-                }
+                var hasMore = interp.step();
+                states.push(angular.copy(interp.state));
+                $scope.$broadcast(hasMore ? 'state.changed' : 'state.done', states);
+                if(!hasMore) interp = null;
             }
         }
 
         function start() {
-            var interp = $scope.interp = interpreter($scope.editor.source);
+            interp = interpreter($scope.editor.source);
             states = [angular.copy(interp.state)];
             $scope.error = interp.state.error;
             $scope.$broadcast('state.started', states);

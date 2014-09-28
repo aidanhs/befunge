@@ -1,0 +1,47 @@
+.grid {
+    font-family: monospace;
+}
+
+.gridRow {
+    height: 27px;
+}
+.gridRow::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+.gridCell {
+    background: rgba(0,128,255,0.04);
+    box-sizing: border-box;
+    float: left;
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    border: 1px solid rgba(0,128,255,0.2);
+    margin: 0 1px 1px 0;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.gridCell.blank {
+    background: none;
+    border: none;
+    padding: 0;
+}
+.gridCell.current {
+    background: rgba(0,128,255,0.25);
+}
+.gridCell.num {
+    font-size: 75%;
+    font-weight: bold;
+    color: #666;
+    text-align: left;
+}
+.gridCell:hover {
+    border: 1px solid rgba(0,128,255,0.5);
+    background: rgba(0,128,255,0.1);
+}
+.gridCell:focus {
+    outline: none;
+    border: 1px solid rgb(0,128,255);
+}
