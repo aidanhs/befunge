@@ -7,76 +7,38 @@ angular.module('Befunge')
         empty: '@',
         exitLooper: '61v\n>\\>2*:0v\n|:-1\\p3<'
     })
-    .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples, cheatSheet) {
+    .controller('EditorCtrl', function ($scope, $interval, interpreter, codeSamples) {
         $scope.editor = { source: codeSamples.empty };
         $scope.samples = codeSamples;
-        $scope.cheatSheet = cheatSheet;
+        var states;
 
-        $scope.states = [];
-        $scope.state = {};
-        $scope.maxStateIndex = 0;
-        $scope.curStateIndex = 0;
-        $scope.player = null;
-
-        $scope.$watch('curStateIndex', function (idx) {
-            $scope.state = $scope.states[idx];
-        });
-
-        function updateScrubber() {
-            $scope.maxStateIndex = $scope.states.length - 1;
-            $scope.curStateIndex = $scope.maxStateIndex;
-            $scope.state = $scope.states[$scope.curStateIndex];
-        }
-
-        $scope.play = function () {
-            if($scope.player) return;
-            $scope.player = $interval(function () {
-                $scope.step();
-            }, 50);
-            $scope.step();
-        };
-        $scope.stop = function () {
-            if($scope.player) {
-                $interval.cancel($scope.player);
-                $scope.player = null;
-            }
-        };
-
-        $scope.$on('$destroy', function () {
-            $scope.stop();
-        });
-
-        $scope.step = function () {
-            if($scope.curStateIndex < $scope.maxStateIndex) {
-                $scope.curStateIndex++;
-                return;
-            }
-
-            if(!$scope.interp) {
-                $scope.stop();
-                return;
-            }
-
+        function step() {
             var interp = $scope.interp;
-            if(interp.step()) {
-                $scope.states.push(angular.copy(interp.state));
-            } else {
-                var state = $scope.states[$scope.states.length-1];
-                state.error = interp.state.error;
-                state.done = 1;
-                interp = null;
-                $scope.stop();
+            if(interp) {
+                if (interp.step()) {
+                    states.push(angular.copy(interp.state));
+                    $scope.$broadcast('state.changed', states);
+                } else {
+                    var state = states[states.length - 1];
+                    state.error = interp.state.error;
+                    state.done = 1;
+                    interp = null;
+                    $scope.$broadcast('state.done', states);
+                }
             }
-            updateScrubber();
-        };
-
-        function run() {
-            $scope.stop();
-            var interp = $scope.interp = interpreter($scope.editor.source);
-            $scope.states = [angular.copy(interp.state)];
-            $scope.error = interp.state.error;
-            updateScrubber();
         }
 
-        $scope.$watchCollection('editor.source', run);
+        function start() {
+            var interp = $scope.interp = interpreter($scope.editor.source);
+            states = [angular.copy(interp.state)];
+            $scope.error = interp.state.error;
+            $scope.$broadcast('state.started', states);
+        }
+
+        $scope.$watchCollection('editor.source', start);
+        $scope.$on('state.step', step);
+        $scope.$on('state.reset', start);
+        $scope.$on('state.get', function (ev, res) {
+            res.states = states;
+        });
     });

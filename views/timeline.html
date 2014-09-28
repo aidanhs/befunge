@@ -1,0 +1,15 @@
+<div>
+    <div>
+        <button ng-click="reset()" class="fa fa-refresh"></button>
+        <input type="number" min="0" max="{{maxStateIndex}}" ng-model="curStateIndex"/> / {{maxStateIndex}}
+        <button ng-click="curStateIndex = 0" class="fa fa-fast-backward"></button>
+        <button ng-click="step(-1)" ng-disabled="player" class="fa fa-step-backward"></button>
+        <button ng-click="play()" ng-disabled="player" class="fa fa-play"></button>
+        <button ng-click="step(1)" ng-disabled="player" class="fa fa-step-forward"></button>
+        <button ng-click="stop()" ng-disabled="!player" class="fa fa-stop"></button>
+    </div>
+    <div grid="state"></div>
+    <div ng-bind="state.error" class="error"></div>
+    <div>Output: <span class="mono" ng-bind="state.output"></span></div>
+    <div>Stack: <span class="mono" ng-bind="state.stack | json"></span></div>
+</div>

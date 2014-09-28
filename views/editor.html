@@ -1,29 +1,6 @@
+<div cheat-sheet></div>
 <div>
-    <div class="cheatSheet">
-        <strong>Befunge:</strong>
-        <div class="cheatRow" ng-repeat="pair in ::cheatSheet">
-            <strong class="cheatCmd" ng-bind="::pair[0]"></strong>
-            <span class="cheatDescr" ng-bind="::pair[1]"></span>
-        </div>
-        <div class="cheatRes">
-            Additional resources:
-            <a href="http://esolangs.org/wiki/befunge" target="_blank">Esolang</a>,
-            <a href="http://en.wikipedia.org/wiki/Befunge" target="_blank">Wikipedia</a>
-        </div>
-    </div>
-    <div>
-        <button ng-repeat="(name, code) in ::samples" ng-click="editor.source = code" ng-bind="::name"></button>
-    </div>
-    <textarea class="source" ng-model="editor.source" ng-trim="false" spellcheck="false"></textarea>
-    <div>
-        <input type="number" min="0" max="{{maxStateIndex}}" ng-model="curStateIndex"/>
-        <button ng-click="curStateIndex = 0" class="fa fa-fast-backward"></button>
-        <button ng-click="play()" ng-disabled="player" class="fa fa-play"></button>
-        <button ng-click="step()" ng-disabled="player" class="fa fa-step-forward"></button>
-        <button ng-click="stop()" ng-disabled="!player" class="fa fa-stop"></button>
-    </div>
-    <div grid="state"></div>
-    <div ng-bind="state.error" class="error"></div>
-    <div>Output: <span class="mono" ng-bind="state.output"></span></div>
-    <div>Stack: <span class="mono" ng-bind="state.stack | json"></span></div>
+    <button ng-repeat="(name, code) in ::samples" ng-click="editor.source = code" ng-bind="::name"></button>
 </div>
+<textarea class="source" ng-model="editor.source" ng-trim="false" spellcheck="false"></textarea>
+<div timeline></div>

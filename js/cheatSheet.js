@@ -1,5 +1,5 @@
 angular.module('Befunge')
-    .value('cheatSheet', [
+    .value('cheatSheetData', [
         ["0 – 9","Push corresponding number onto the stack"],
         ["+","Addition: Pop a and b, then push a+b"],
         ["-","Subtraction: Pop a and b, then push b-a"],
@@ -27,4 +27,14 @@ angular.module('Befunge')
         ["&","Get integer from user and push it"],
         ["~","Get character from user and push it"],
         ["@","End program"]
-    ]);
+    ])
+    .directive('cheatSheet', function (cheatSheetData) {
+        return {
+            templateUrl: "views/cheatSheet.html",
+            replace: false,
+            scope: true,
+            link: function (scope) {
+                scope.cheatSheet = cheatSheetData;
+            }
+        }
+    });
