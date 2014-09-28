@@ -25,6 +25,7 @@ angular.module('Befunge')
                 scope.$on('state.started', function (ev, states) {
                     scope.stop();
                     scope.states = states;
+                    scope.state = scope.states[0];
                     updateScrubber();
                 });
                 scope.$on('state.done', function (ev, states) {
