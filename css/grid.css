@@ -3,7 +3,7 @@
 }
 
 .gridRow {
-    height: 27px;
+    height: 19px;
 }
 .gridRow::after {
     content: "";
@@ -14,8 +14,8 @@
     background: rgba(0,128,255,0.04);
     box-sizing: border-box;
     float: left;
-    width: 26px;
-    height: 26px;
+    width: 18px;
+    height: 18px;
     padding: 2px;
     border: 1px solid rgba(0,128,255,0.2);
     margin: 0 1px 1px 0;
