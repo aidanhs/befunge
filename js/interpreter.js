@@ -33,7 +33,7 @@ angular.module('Befunge')
                 case '+': res = b + a; break;
                 case '-': res = b - a; break;
                 case '*': res = b * a; break;
-                case '/': res = a === 0 ? 0 : b / a; break;
+                case '/': res = a === 0 ? 0 : Math.floor(b / a); break;
                 case '%': res = a === 0 ? 0 : b % a; break;
             }
             state.stack.push(res);
