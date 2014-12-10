@@ -7,6 +7,7 @@ angular.module('Befunge')
                 scope.player= null;
                 scope.maxStateIndex = 0;
                 scope.curStateIndex = 0;
+                scope.stepPause = 50;
                 scope.states = [];
                 scope.state = {};
 
@@ -48,7 +49,7 @@ angular.module('Befunge')
                     if(scope.player) return;
                     scope.player = $interval(function () {
                         scope.step(1);
-                    }, 50);
+                    }, scope.stepPause);
                     scope.step(1);
                 };
                 scope.stop = function () {
