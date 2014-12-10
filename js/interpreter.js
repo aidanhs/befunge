@@ -158,6 +158,7 @@ angular.module('Befunge')
 
             if (state.skip) {
                 state.skip = false;
+                step(state);
             } else {
                 var action = state.rows[state.y][state.x];
                 if (state.string) {
