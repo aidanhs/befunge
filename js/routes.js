@@ -7,7 +7,4 @@ angular.module('Befunge')
                 templateUrl: "views/editor.html",
                 controller: 'EditorCtrl'
             })
-            .otherwise({
-                redirectTo: '/'
-            });
     });
