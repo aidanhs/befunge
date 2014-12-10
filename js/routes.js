@@ -4,10 +4,6 @@ angular.module('Befunge')
 
         $routeProvider
             .when('/', {
-                templateUrl: "views/menu.html",
-                controller: 'MenuCtrl'
-            })
-            .when('/editor', {
                 templateUrl: "views/editor.html",
                 controller: 'EditorCtrl'
             })
