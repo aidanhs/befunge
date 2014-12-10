@@ -177,6 +177,7 @@ angular.module('Befunge')
         }
 
         return function (code) {
+            code = code.replace(/[\u2002\u00A0\t]/g, ' ');
             var rows = (code || "").split('\n').map(function (line) {
                 return line.split("");
             });
