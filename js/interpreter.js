@@ -14,6 +14,7 @@ angular.module('Befunge')
             '#': skip,
             'p': put,
             'g': get,
+            '&': numin,
             '@': end,
             ' ': nop
         };
@@ -57,6 +58,15 @@ angular.module('Befunge')
         }
         function dupe(state) {
             state.stack.push(state.stack.length > 0 ? state.stack[state.stack.length - 1] : 0);
+        }
+        function numin(state, op) {
+            var val = prompt('Enter number');
+            val = val || '0';
+            val = +val;
+            if (isNaN(val)) {
+                val = 0;
+            }
+            state.stack.push(val);
         }
         function swap(state) {
             var len = state.stack.length;
