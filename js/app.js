@@ -1,1 +1,1 @@
-angular.module('Befunge', ['ngRoute']);
+angular.module('Befunge', []);

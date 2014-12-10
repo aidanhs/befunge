@@ -34,4 +34,10 @@ angular.module('Befunge')
         $scope.$on('state.get', function (ev, res) {
             res.states = states;
         });
+    })
+    .directive('editor', function () {
+        return {
+            templateUrl: "views/editor.html",
+            controller: 'EditorCtrl'
+        };
     });
